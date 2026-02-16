@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIXSY - VELVET FOREST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6ec3f4 0%, #48c6ef 50%, #6f86d6 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --text-white: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.8);
+            --accent-blue: #1a5276;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating Blueberries Animation */
+        .floating-berry {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 30%, #6a4c93, #2d1b4e);
+            border-radius: 50%;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .floating-berry::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -40px) rotate(90deg); }
+            50% { transform: translate(-20px, -60px) rotate(180deg); }
+            75% { transform: translate(40px, -30px) rotate(270deg); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-40px, -50px) rotate(120deg); }
+            66% { transform: translate(30px, -20px) rotate(240deg); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, -70px) rotate(180deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: relative;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-white);
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-white);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.7;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .lang-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-white);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .lang-dropdown svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .menu-btn {
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            color: var(--text-white);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hero Content */
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem 5%;
+            min-height: calc(100vh - 200px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-left {
+            flex: 1;
+            max-width: 350px;
+        }
+
+        .category-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            color: var(--text-white);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .order-btn {
+            background: var(--text-white);
+            color: var(--accent-blue);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Center - Drink Image */
+        .hero-center {
+            flex: 1.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .drink-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .drink-image {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
+            animation: floatDrink 4s ease-in-out infinite;
+        }
+
+        @keyframes floatDrink {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Right - Ingredients */
+        .hero-right {
+            flex: 1;
+            max-width: 280px;
+            text-align: right;
+        }
+
+        .ingredients-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .ingredients-list li {
+            color: var(--text-white);
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .alcohol-info {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+        }
+
+        .read-more {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            padding-bottom: 3px;
+            transition: border-color 0.3s;
+        }
+
+        .read-more:hover {
+            border-color: var(--text-white);
+        }
+
+        /* Bottom Navigation */
+        .hero-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem 5%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent);
+        }
+
+        .slide-counter {
+            font-size: 0.9rem;
+            color: var(--text-white);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .slide-counter .current {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .slide-name {
+            font-size: 0.9rem;
+            color: var(--text-white);
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .slide-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-arrow {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: transparent;
+            color: var(--text-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-arrow svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--text-white);
+            transition: all 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 3rem;
+                padding-top: 3rem;
+            }
+
+            .hero-left, .hero-right {
+                max-width: 100%;
+                text-align: center;
+            }
+
+            .hero-right {
+                order: 3;
+            }
+
+            .hero-center {
+                order: 2;
+            }
+
+            .ingredients-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .ingredients-list li {
+                margin-bottom: 0;
+            }
+
+            .drink-container {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .lang-dropdown {
+                display: none;
+            }
+
+            .hero-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <!-- Floating Blueberries -->
+        <div id="floating-berries"></div>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-logo">MIXSY</div>
+            
+            <ul class="nav-menu">
+                <li><a href="#home">HOME</a></li>
+                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#drinks">DRINKS</a></li>
+                <li><a href="#order">ORDER</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+            </ul>
+
+            <div class="nav-right">
+                <div class="lang-dropdown">
+                    EN
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <button class="menu-btn">MENU</button>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <!-- Left Side -->
+            <div class="hero-left">
+                <div class="category-label">BLUEBERRIES</div>
+                <h1 class="hero-title">VELVET<br>FOREST</h1>
+                <p class="hero-subtitle">Deep, rich, and mysteriously fruity.</p>
+                <button class="order-btn">ORDER NOW</button>
+            </div>
+
+            <!-- Center - Drink Image -->
+            <div class="hero-center">
+                <div class="drink-container">
+                    <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80" 
+                         alt="Velvet Forest Cocktail" 
+                         class="drink-image"
+                         id="drinkImage">
+                </div>
+            </div>
+
+            <!-- Right Side -->
+            <div class="hero-right">
+                <div class="ingredients-label">INGREDIENTS</div>
+                <ul class="ingredients-list">
+                    <li>WATER</li>
+                    <li>GIN</li>
+                    <li>BLACKBERRY LIQUEUR</li>
+                    <li>BLACKBERRIES</li>
+                    <li>ICE</li>
+                </ul>
+                <div class="alcohol-info">ALCOHOL 2%</div>
+                <a href="#read-more" class="read-more">READ MORE</a>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="hero-bottom">
+            <div class="slide-counter">
+                <span class="current" id="currentSlide">1</span>/12
+            </div>
+            <div class="slide-name" id="slideName">VELVET FOREST</div>
+            <div class="slide-nav">
+                <button class="nav-arrow" id="prevBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="nav-arrow" id="nextBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Slide Data
+        const slides = [
+            {
+                name: "VELVET FOREST",
+                category: "BLUEBERRIES",
+                image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80",
+                ingredients: ["WATER", "GIN", "BLACKBERRY LIQUEUR", "BLACKBERRIES", "ICE"],
+                alcohol: "2%"
+            },
+            {
+                name: "OCEAN BREEZE",
+                category: "TROPICAL",
+                image: "https://images.unsplash.com/photo-1536935338788-843bb6708f1c?w=600&q=80",
+                ingredients: ["VODKA", "BLUE CURACAO", "COCONUT CREAM", "PINEAPPLE", "ICE"],
+                alcohol: "4%"
+            },
+            {
+                name: "MIDNIGHT ROSE",
+                category: "FLORAL",
+                image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80",
+                ingredients: ["GIN", "ROSE WATER", "LAVENDER", "LEMON", "ICE"],
+                alcohol: "3%"
+            },
+            {
+                name: "CITRUS BURST",
+                category: "CITRUS",
+                image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&q=80",
+                ingredients: ["TEQUILA", "LIME", "ORANGE", "AGAVE", "ICE"],
+                alcohol: "5%"
+            },
+            {
+                name: "SPICY MARGARITA",
+                category: "SPICY",
+                image: "https://images.unsplash.com/photo-1575023782549-62ca0d244b39?w=600&q=80",
+                ingredients: ["TEQUILA", "JALAPEÑO", "LIME", "TRIPLE SEC", "ICE"],
+                alcohol: "4%"
+            },
+            {
+                name: "BERRY FUSION",
+                category: "BERRIES",
+                image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&q=80",
+                ingredients: ["VODKA", "RASPBERRY", "STRAWBERRY", "MINT", "ICE"],
+                alcohol: "3%"
+            },
+            {
+                name: "TROPICAL PARADISE",
+                category: "EXOTIC",
+                image: "https://images.unsplash.com/photo-1546171753-97d7676e4602?w=600&q=80",
+                ingredients: ["RUM", "MANGO", "PASSION FRUIT", "COCONUT", "ICE"],
+                alcohol: "6%"
+            },
+            {
+                name: "SMOKY OLD FASHIONED",
+                category: "CLASSIC",
+                image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80",
+                ingredients: ["WHISKEY", "BITTERS", "ORANGE PEEL", "CHERRY", "ICE"],
+                alcohol: "8%"
+            },
+            {
+                name: "ELDERFLOWER SPRITZ",
+                category: "REFRESHING",
+                image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&q=80",
+                ingredients: ["PROSECCO", "ELDERFLOWER", "SODA", "LEMON", "ICE"],
+                alcohol: "2%"
+            },
+            {
+                name: "COFFEE MARTINI",
+                category: "COFFEE",
+                image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=600&q=80",
+                ingredients: ["VODKA", "ESPRESSO", "COFFEE LIQUEUR", "SUGAR", "ICE"],
+                alcohol: "5%"
+            },
+            {
+                name: "MOJITO CLASSIC",
+                category: "MINT",
+                image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=600&q=80",
+                ingredients: ["RUM", "MINT", "LIME", "SUGAR", "SODA"],
+                alcohol: "3%"
+            },
+            {
+                name: "PINK LADY",
+                category: "ELEGANT",
+                image: "https://images.unsplash.com/photo-1560512823-829485b8bf24?w=600&q=80",
+                ingredients: ["GIN", "APPLEJACK", "LEMON", "GRENADINE", "ICE"],
+                alcohol: "4%"
+            }
+        ];
+
+        let currentIndex = 0;
+
+        // DOM Elements
+        const currentSlideEl = document.getElementById('currentSlide');
+        const slideNameEl = document.getElementById('slideName');
+        const drinkImageEl = document.getElementById('drinkImage');
+        const categoryLabelEl = document.querySelector('.category-label');
+        const heroTitleEl = document.querySelector('.hero-title');
+        const ingredientsListEl = document.querySelector('.ingredients-list');
+        const alcoholInfoEl = document.querySelector('.alcohol-info');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Update Slide Function
+        function updateSlide(index) {
+            const slide = slides[index];
+            
+            // Animate content change
+            drinkImageEl.style.opacity = '0';
+            heroTitleEl.style.opacity = '0';
+            categoryLabelEl.style.opacity = '0';
+            
+            setTimeout(() => {
+                currentSlideEl.textContent = index + 1;
+                slideNameEl.textContent = slide.name;
+                categoryLabelEl.textContent = slide.category;
+                heroTitleEl.innerHTML = slide.name.replace(' ', '<br>');
+                drinkImageEl.src = slide.image;
+                alcoholInfoEl.textContent = `ALCOHOL ${slide.alcohol}`;
+                
+                // Update ingredients
+                ingredientsListEl.innerHTML = slide.ingredients
+                    .map(ing => `<li>${ing}</li>`)
+                    .join('');
+                
+                drinkImageEl.style.opacity = '1';
+                heroTitleEl.style.opacity = '1';
+                categoryLabelEl.style.opacity = '1';
+            }, 300);
+        }
+
+        // Event Listeners
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateSlide(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlide(currentIndex);
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                updateSlide(currentIndex);
+            } else if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateSlide(currentIndex);
+            }
+        });
+
+        // Create Floating Blueberries
+        function createFloatingBerries() {
+            const container = document.getElementById('floating-berries');
+            const berryCount = 15;
+
+            for (let i = 0; i < berryCount; i++) {
+                const berry = document.createElement('div');
+                berry.className = 'floating-berry';
+                
+                // Random positioning
+                berry.style.left = `${Math.random() * 100}%`;
+                berry.style.top = `${Math.random() * 100}%`;
+                
+                // Random size
+                const size = 15 + Math.random() * 15;
+                berry.style.width = `${size}px`;
+                berry.style.height = `${size}px`;
+                
+                // Random animation
+                const animations = ['float1', 'float2', 'float3'];
+                const randomAnim = animations[Math.floor(Math.random() * animations.length)];
+                const duration = 8 + Math.random() * 10;
+                const delay = Math.random() * 5;
+                
+                berry.style.animation = `${randomAnim} ${duration}s ease-in-out ${delay}s infinite`;
+                
+                // Random opacity
+                berry.style.opacity = 0.3 + Math.random() * 0.4;
+                
+                container.appendChild(berry);
+            }
+        }
+
+        // Initialize
+        createFloatingBerries();
+
+        // Smooth transition for image
+        drinkImageEl.style.transition = 'opacity 0.3s ease';
+        heroTitleEl.style.transition = 'opacity 0.3s ease';
+        categoryLabelEl.style.transition = 'opacity 0.3s ease';
+    </script>
+</body>
+</html>
