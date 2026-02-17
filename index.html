@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>House of Miyou - Authentic Haitian Flavors</title>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap"></noscript>
     <style>
-        /* ==================== */
-        /* CSS VARIABLES */
-        /* ==================== */
+
         :root {
             --cream: #F5F0E8;
             --cream-light: #FAF7F2;
@@ -28,9 +30,6 @@
             --glass-bg: rgba(245, 240, 232, 0.15);
         }
 
-        /* ==================== */
-        /* RESET & BASE */
-        /* ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -47,9 +46,6 @@
             background: var(--cream);
         }
 
-        /* ==================== */
-        /* LOADING SCREEN */
-        /* ==================== */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -133,9 +129,6 @@
             color: var(--burgundy);
         }
 
-        /* ==================== */
-        /* NAVIGATION */
-        /* ==================== */
         .navbar {
             position: fixed;
             top: 0;
@@ -149,7 +142,6 @@
             transition: all 0.4s ease;
             background: transparent;
         }
-
 
         .nav-logo {
             font-family: 'Playfair Display', serif;
@@ -221,9 +213,6 @@
             background: rgba(43, 31, 20, 0.08);
         }
 
-        /* ==================== */
-        /* HERO SCROLL ANIMATION */
-        /* ==================== */
         .hero-scroll-section {
             position: relative;
             z-index: 0;
@@ -247,7 +236,6 @@
             height: 100%;
         }
 
-        /* Text overlays */
         .scroll-overlay {
             position: absolute;
             z-index: 10;
@@ -331,7 +319,6 @@
             box-shadow: 0 8px 30px rgba(123, 45, 59, 0.4);
         }
 
-        /* Scroll indicator */
         .scroll-indicator {
             position: absolute;
             bottom: 30px;
@@ -365,7 +352,6 @@
             50% { opacity: 0.8; transform: scaleY(1.2); }
         }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -381,9 +367,6 @@
             background: var(--burgundy-light);
         }
 
-        /* ==================== */
-        /* PRODUCT SHOWCASE SLIDER */
-        /* ==================== */
         .product-showcase {
             position: relative;
             z-index: 1;
@@ -421,7 +404,6 @@
             overflow: hidden;
         }
 
-        /* Per-slide warm backgrounds */
         .showcase-slide.slide-cremas {
             background: linear-gradient(180deg, #C9A66B 0%, #D4B87A 60%, #BF9A5E 100%);
         }
@@ -563,7 +545,6 @@
             stroke: var(--text-dark);
         }
 
-        /* Ingredient Badges */
         .showcase-ingredients {
             position: absolute;
             right: 60px;
@@ -601,11 +582,6 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* (Carousel and Grid sections removed) */
-
-        /* ==================== */
-        /* TAGLINE SECTION */
-        /* ==================== */
         .tagline-section {
             min-height: 60vh;
             background: linear-gradient(135deg, var(--burgundy-dark) 0%, var(--burgundy) 50%, var(--brown-warm) 100%);
@@ -672,9 +648,6 @@
             object-fit: cover;
         }
 
-        /* ==================== */
-        /* FOOTER */
-        /* ==================== */
         .footer {
             background: var(--brown-dark);
             color: var(--cream);
@@ -755,9 +728,6 @@
             border-color: var(--gold);
         }
 
-        /* ==================== */
-        /* RESPONSIVE */
-        /* ==================== */
         @media (max-width: 1024px) {
             .scroll-overlay.beat-b,
             .scroll-overlay.beat-c {
@@ -801,7 +771,7 @@
         }
 
         @media (max-width: 768px) {
-            /* --- Navigation --- */
+
             .nav-menu {
                 display: none;
             }
@@ -823,7 +793,6 @@
                 font-size: 0.7rem;
             }
 
-            /* --- Hero --- */
             .scroll-overlay h2 {
                 font-size: clamp(2.2rem, 10vw, 3.5rem);
             }
@@ -832,7 +801,6 @@
                 height: 280vh;
             }
 
-            /* --- Loading --- */
             .loading-footer {
                 padding: 0 24px;
                 font-size: 10px;
@@ -843,7 +811,6 @@
                 font-size: 36px;
             }
 
-            /* --- Product Showcase (full restructure) --- */
             .showcase-slide {
                 flex-direction: column;
                 justify-content: flex-start;
@@ -930,7 +897,6 @@
                 height: 22px;
             }
 
-            /* --- Tagline --- */
             .tagline-section {
                 padding: 60px 24px;
                 min-height: 40vh;
@@ -947,7 +913,6 @@
                 margin: 0 6px;
             }
 
-            /* --- Footer --- */
             .footer {
                 padding: 40px 5%;
             }
@@ -978,7 +943,6 @@
             }
         }
 
-        /* --- Extra small screens (≤480px) --- */
         @media (max-width: 480px) {
             .showcase-slide {
                 padding-top: 70px;
@@ -1020,9 +984,6 @@
             }
         }
 
-        /* ==================== */
-        /* ANIMATIONS */
-        /* ==================== */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
@@ -1066,10 +1027,7 @@
     </style>
 </head>
 <body>
-    <!-- ==================== -->
-    <!-- LOADING SCREEN -->
-    <!-- ==================== -->
-    <div id="loading-screen" class="loading-screen">
+                <div id="loading-screen" class="loading-screen">
         <div class="loading-logo">
             <div class="loading-logo-text">HOUSE OF<br>MIYOU</div>
             <div class="loading-logo-sub">La Belle Miyou</div>
@@ -1083,13 +1041,9 @@
         </div>
     </div>
 
-    <!-- ==================== -->
-    <!-- MAIN CONTENT -->
-    <!-- ==================== -->
-    <main id="main-content" style="display: none;">
+                <main id="main-content" style="display: none;">
 
-        <!-- Navigation -->
-        <nav class="navbar" id="navbar">
+                <nav class="navbar" id="navbar">
             <a href="#" class="nav-logo">HOUSE OF <span>Miyou</span></a>
             <ul class="nav-menu">
                 <li><a href="#hero">Home</a></li>
@@ -1107,57 +1061,45 @@
             </div>
         </nav>
 
-        <!-- ==================== -->
-        <!-- HERO SCROLL ANIMATION -->
-        <!-- ==================== -->
-        <section id="hero" class="hero-scroll-section">
+                                <section id="hero" class="hero-scroll-section">
             <div class="hero-sticky">
                 <canvas id="hero-canvas"></canvas>
 
-                <!-- Beat A: Opening — centered -->
-                <div class="scroll-overlay beat-a" id="beat-a">
+                                <div class="scroll-overlay beat-a" id="beat-a">
                     <h2>LIQUEUR<br>GRENADINE</h2>
                     <p>Exquisite & Sweet</p>
                 </div>
 
-                <!-- Beat B: Heritage — right aligned -->
-                <div class="scroll-overlay beat-b" id="beat-b">
+                                <div class="scroll-overlay beat-b" id="beat-b">
                     <h2>HAITIAN<br>HERITAGE</h2>
                     <p>Crafted with centuries of tradition</p>
                 </div>
 
-                <!-- Beat C: Quality — left aligned -->
-                <div class="scroll-overlay beat-c" id="beat-c">
+                                <div class="scroll-overlay beat-c" id="beat-c">
                     <h2>PREMIUM<br>QUALITY</h2>
                     <p>Authentic Haitian flavors</p>
                 </div>
 
-                <!-- Beat D: CTA — centered bottom -->
-                <div class="scroll-overlay beat-d" id="beat-d">
+                                <div class="scroll-overlay beat-d" id="beat-d">
                     <h2>TASTE THE<br>TRADITION</h2>
                     <p>Experience La Belle Miyou</p>
                     <a href="#about" class="cta-btn">Explore Products</a>
                 </div>
 
-                <!-- Scroll indicator -->
-                <div class="scroll-indicator" id="scroll-indicator">
+                                <div class="scroll-indicator" id="scroll-indicator">
                     <span>Scroll to Explore</span>
                     <div class="scroll-line"></div>
                 </div>
             </div>
         </section>
 
-        <!-- ==================== -->
-        <!-- PRODUCT SHOWCASE SLIDER -->
-        <!-- ==================== -->
-        <section id="about" class="product-showcase">
+                                <section id="about" class="product-showcase">
             <div class="showcase-slider">
                 <div class="showcase-track" id="showcase-track">
-                    <!-- Slide 1: Cremas Cocoye -->
-                    <div class="showcase-slide slide-cremas">
+                                        <div class="showcase-slide slide-cremas">
                         <div class="showcase-bg-text">CREMAS</div>
                         <div class="showcase-bottle">
-                            <img src="images/cremas-cocoye.png" alt="Cremas Cocoye">
+                            <img src="images/cremas-cocoye.webp" alt="Cremas Cocoye">
                         </div>
                         <div class="showcase-info">
                             <h3 class="showcase-product-name">Cremas Cocoye</h3>
@@ -1171,11 +1113,10 @@
                             <div class="ingredient-badge">Vanilla</div>
                         </div>
                     </div>
-                    <!-- Slide 2: Liqueur Grenadine -->
-                    <div class="showcase-slide slide-liqueur">
+                                        <div class="showcase-slide slide-liqueur">
                         <div class="showcase-bg-text">LIQUEUR</div>
                         <div class="showcase-bottle">
-                            <img src="images/liqueur-grenadine.png" alt="Liqueur Grenadine">
+                            <img src="images/liqueur-grenadine.webp" alt="Liqueur Grenadine" loading="lazy">
                         </div>
                         <div class="showcase-info">
                             <h3 class="showcase-product-name">Liqueur Grenadine</h3>
@@ -1189,11 +1130,10 @@
                             <div class="ingredient-badge">Spices</div>
                         </div>
                     </div>
-                    <!-- Slide 3: Epis Lakay -->
-                    <div class="showcase-slide slide-epis">
+                                        <div class="showcase-slide slide-epis">
                         <div class="showcase-bg-text">EPIS</div>
                         <div class="showcase-bottle">
-                            <img src="images/epis-lakay.png" alt="Epis Lakay">
+                            <img src="images/epis-lakay.webp" alt="Epis Lakay" loading="lazy">
                         </div>
                         <div class="showcase-info">
                             <h3 class="showcase-product-name">Epis Lakay</h3>
@@ -1207,11 +1147,10 @@
                             <div class="ingredient-badge">Citrus</div>
                         </div>
                     </div>
-                    <!-- Slide 4: Bon Piman -->
-                    <div class="showcase-slide slide-piman">
+                                        <div class="showcase-slide slide-piman">
                         <div class="showcase-bg-text">PIMAN</div>
                         <div class="showcase-bottle">
-                            <img src="images/bon-piman.png" alt="Bon Piman">
+                            <img src="images/bon-piman.webp" alt="Bon Piman" loading="lazy">
                         </div>
                         <div class="showcase-info">
                             <h3 class="showcase-product-name">Bon Piman</h3>
@@ -1227,8 +1166,7 @@
                     </div>
                 </div>
 
-                <!-- Navigation arrow — bottom right, double chevron -->
-                <div class="showcase-nav">
+                                <div class="showcase-nav">
                     <button class="showcase-nav-btn" id="showcase-next" aria-label="Next product">
                         <svg viewBox="0 0 32 32" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="10,8 18,16 10,24" />
@@ -1239,17 +1177,12 @@
             </div>
         </section>
 
-        <!-- (Carousel and Grid sections removed) -->
-
-        <!-- ==================== -->
-        <!-- TAGLINE SECTION -->
-        <!-- ==================== -->
-        <section class="tagline-section">
+                                <section class="tagline-section">
             <div class="tagline-content fade-in">
                 <h2 class="tagline-text">
                     IT'S NOT JUST WHAT YOU
                     <span class="inline-image">
-                        <img src="images/cremas-cocoye.png" alt="La Belle Miyou product">
+                        <img src="images/cremas-cocoye.webp" alt="La Belle Miyou product" loading="lazy">
                     </span>
                     TASTE. IT'S WHERE IT
                     <br>
@@ -1258,10 +1191,7 @@
             </div>
         </section>
 
-        <!-- ==================== -->
-        <!-- FOOTER -->
-        <!-- ==================== -->
-        <footer class="footer" id="contact">
+                                <footer class="footer" id="contact">
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>House of Miyou</h4>
@@ -1317,79 +1247,94 @@
     </main>
 
     <script>
-        // ====================
-        // FRAME SEQUENCE CONFIG
-        // ====================
+
         const FRAME_COUNT = 180;
         const FRAME_PATH = 'sequence/frame_';
         const FRAME_EXT = '.webp';
-        const frames = [];
-        let framesLoaded = 0;
+        const frames = new Array(FRAME_COUNT).fill(null);
         let allFramesReady = false;
 
-        // ====================
-        // LOADING SCREEN — real frame preloading
-        // ====================
         document.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainContent = document.getElementById('main-content');
             const loadingPercent = document.getElementById('loading-percent');
             const loadingBar = document.getElementById('loading-bar');
 
-            function onFrameLoad() {
-                framesLoaded++;
-                const progress = (framesLoaded / FRAME_COUNT) * 100;
-                loadingPercent.textContent = Math.floor(progress) + '%';
-                loadingBar.style.width = progress + '%';
+            const PHASE1_COUNT = 30;
+            let phase1Loaded = 0;
+            let pageRevealed = false;
 
-                if (framesLoaded === FRAME_COUNT) {
-                    allFramesReady = true;
+            function loadFrame(i) {
+                return new Promise(resolve => {
+                    const img = new Image();
+                    const num = String(i).padStart(3, '0');
+                    img.src = FRAME_PATH + num + FRAME_EXT;
+                    img.onload = async () => {
+                        try {
+                            const bitmap = await createImageBitmap(img);
+                            frames[i - 1] = bitmap;
+                        } catch (e) {
+                            frames[i - 1] = img;
+                        }
+                        resolve();
+                    };
+                    img.onerror = () => resolve();
+                });
+            }
+
+            function revealPage() {
+                if (pageRevealed) return;
+                pageRevealed = true;
+                allFramesReady = true;
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    mainContent.style.display = 'block';
                     setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
-                        mainContent.style.display = 'block';
-                        setTimeout(() => {
-                            loadingScreen.style.display = 'none';
-                            initAnimations();
-                            initScrollCanvas();
-                        }, 800);
-                    }, 400);
-                }
+                        loadingScreen.style.display = 'none';
+                        initAnimations();
+                        initScrollCanvas();
+                    }, 800);
+                }, 400);
             }
 
-            // Preload all frames as GPU-ready ImageBitmaps
-            for (let i = 1; i <= FRAME_COUNT; i++) {
-                const img = new Image();
-                const num = String(i).padStart(3, '0');
-                img.src = FRAME_PATH + num + FRAME_EXT;
-                img.onload = async () => {
-                    try {
-                        const bitmap = await createImageBitmap(img);
-                        frames[i - 1] = bitmap;
-                    } catch (e) {
-                        frames[i - 1] = img; // fallback to raw Image
-                    }
-                    onFrameLoad();
-                };
-                img.onerror = onFrameLoad; // count errors too so we don't hang
-                frames.push(null); // placeholder until bitmap resolves
+            const phase1Promises = [];
+            for (let i = 1; i <= PHASE1_COUNT; i++) {
+                const p = loadFrame(i).then(() => {
+                    phase1Loaded++;
+                    const progress = (phase1Loaded / PHASE1_COUNT) * 100;
+                    loadingPercent.textContent = Math.floor(progress) + '%';
+                    loadingBar.style.width = progress + '%';
+                });
+                phase1Promises.push(p);
             }
+
+            Promise.all(phase1Promises).then(() => {
+                revealPage();
+
+                const BATCH_SIZE = 10;
+                let nextFrame = PHASE1_COUNT + 1;
+                function loadNextBatch() {
+                    if (nextFrame > FRAME_COUNT) return;
+                    const batch = [];
+                    for (let i = 0; i < BATCH_SIZE && nextFrame <= FRAME_COUNT; i++, nextFrame++) {
+                        batch.push(loadFrame(nextFrame));
+                    }
+                    Promise.all(batch).then(loadNextBatch);
+                }
+                loadNextBatch();
+            });
         });
 
-        // ====================
-        // SCROLL-LINKED CANVAS
-        // ====================
         function initScrollCanvas() {
             const canvas = document.getElementById('hero-canvas');
             const ctx = canvas.getContext('2d');
             const heroSection = document.querySelector('.hero-scroll-section');
             const scrollIndicator = document.getElementById('scroll-indicator');
 
-            // Mobile frame offset — skip blank intro frames on small screens
             let isMobile = window.innerWidth <= 768;
             let FRAME_START = isMobile ? 20 : 0;
             let frameRange = FRAME_COUNT - FRAME_START;
 
-            // Text overlay elements
             const beats = [
                 { el: document.getElementById('beat-a'), start: 0.00, end: 0.18 },
                 { el: document.getElementById('beat-b'), start: 0.24, end: 0.44 },
@@ -1397,27 +1342,26 @@
                 { el: document.getElementById('beat-d'), start: 0.78, end: 0.96 },
             ];
 
-            // Smoothed scroll value (spring-like)
             let currentProgress = 0;
             let targetProgress = 0;
             const stiffness = 0.08;
             let lastDrawnFrame = -1;
 
             function resizeCanvas() {
-                const dpr = 1; // 1x is enough for photo sequence — avoids 4x pixel fill cost
+                const dpr = 1;
                 canvas.width = window.innerWidth * dpr;
                 canvas.height = window.innerHeight * dpr;
                 canvas.style.width = window.innerWidth + 'px';
                 canvas.style.height = window.innerHeight + 'px';
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                lastDrawnFrame = -1; // force redraw
+                lastDrawnFrame = -1;
             }
 
             function drawFrame(index) {
                 if (index === lastDrawnFrame) return;
                 const img = frames[index];
                 if (!img) return;
-                // ImageBitmap uses .width/.height; Image uses .naturalWidth/.naturalHeight
+
                 const iw = img.width || img.naturalWidth;
                 const ih = img.height || img.naturalHeight;
                 if (!iw || !ih) return;
@@ -1425,7 +1369,6 @@
                 const cw = window.innerWidth;
                 const ch = window.innerHeight;
 
-                // "Cover" fit — fill viewport, crop excess
                 const scale = Math.max(cw / iw, ch / ih);
                 const dw = iw * scale;
                 const dh = ih * scale;
@@ -1437,7 +1380,6 @@
                 lastDrawnFrame = index;
             }
 
-            // Opacity calc: fade in first 10% of range, fade out last 10%
             function beatOpacity(progress, start, end) {
                 const range = end - start;
                 const fadeIn = start + range * 0.12;
@@ -1449,7 +1391,6 @@
                 return 1;
             }
 
-            // Y offset: enter from +20px, exit to -20px
             function beatY(progress, start, end) {
                 const range = end - start;
                 const fadeIn = start + range * 0.12;
@@ -1475,7 +1416,6 @@
                     beat.el.style.opacity = opacity;
                     beat.el.style.transform = beat.el.style.transform.replace(/translateY\([^)]*\)/, '') ;
 
-                    // Preserve existing transforms but add Y offset
                     if (beat.el.classList.contains('beat-a')) {
                         beat.el.style.transform = `translate(-50%, calc(-50% + ${y}px))`;
                     } else if (beat.el.classList.contains('beat-b')) {
@@ -1487,7 +1427,6 @@
                     }
                 });
 
-                // Scroll indicator: visible at 0%, gone by 8%
                 if (scrollIndicator) {
                     const indicatorOpacity = progress < 0.02 ? 1 : progress < 0.08 ? 1 - ((progress - 0.02) / 0.06) : 0;
                     scrollIndicator.style.opacity = indicatorOpacity;
@@ -1501,11 +1440,17 @@
                 targetProgress = Math.max(0, Math.min(1, scrolled / sectionHeight));
             }
 
+            let animating = false;
+            function startAnimLoop() {
+                if (!animating) { animating = true; requestAnimationFrame(animate); }
+            }
+            function stopAnimLoop() { animating = false; }
+
             function animate() {
-                // Spring interpolation for buttery smoothness
+                if (!animating) return;
+
                 currentProgress += (targetProgress - currentProgress) * stiffness;
 
-                // Clamp tiny differences
                 if (Math.abs(currentProgress - targetProgress) < 0.0005) {
                     currentProgress = targetProgress;
                 }
@@ -1520,28 +1465,24 @@
                 requestAnimationFrame(animate);
             }
 
-            // Init
             resizeCanvas();
             window.addEventListener('resize', () => {
                 resizeCanvas();
-                // Update mobile frame offset on orientation change / resize
+
                 isMobile = window.innerWidth <= 768;
                 FRAME_START = isMobile ? 20 : 0;
                 frameRange = FRAME_COUNT - FRAME_START;
             });
             window.addEventListener('scroll', onScroll, { passive: true });
 
-            // Draw first frame immediately (skip blank frames on mobile)
             drawFrame(FRAME_START);
             updateOverlays(0);
 
-            // Start animation loop
-            requestAnimationFrame(animate);
+            const heroObserver = new IntersectionObserver(([entry]) => {
+                entry.isIntersecting ? startAnimLoop() : stopAnimLoop();
+            });
+            heroObserver.observe(heroSection);
         }
-
-        // ====================
-        // NAVIGATION SCROLL
-        // ====================
 
         document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -1556,9 +1497,6 @@
             });
         });
 
-        // ====================
-        // SCROLL ANIMATIONS
-        // ====================
         function initAnimations() {
             const observerOptions = {
                 threshold: 0.1,
@@ -1577,12 +1515,8 @@
                 observer.observe(el);
             });
 
-            // Hero is now a simple product showcase — no fade-in elements needed
         }
 
-        // ====================
-        // BUTTON HANDLERS
-        // ====================
         document.querySelectorAll('.menu-btn, .showcase-see-more').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1590,9 +1524,6 @@
             });
         });
 
-        // ====================
-        // PRODUCT SHOWCASE SLIDER
-        // ====================
         (function() {
             const track = document.getElementById('showcase-track');
             const slides = track.querySelectorAll('.showcase-slide');
@@ -1612,13 +1543,11 @@
                 track.style.transform = `translateX(${currentTranslate}px)`;
             }
 
-            // Arrow navigation
             nextBtn.addEventListener('click', () => {
                 goToSlide(currentSlide + 1);
                 resetAutoplay();
             });
 
-            // Keyboard navigation
             document.addEventListener('keydown', (e) => {
                 const showcase = document.querySelector('.product-showcase');
                 const rect = showcase.getBoundingClientRect();
@@ -1634,7 +1563,6 @@
                 }
             });
 
-            // Touch / drag support
             track.addEventListener('pointerdown', (e) => {
                 isDragging = true;
                 startX = e.clientX;
@@ -1672,12 +1600,10 @@
                 goToSlide(currentSlide);
             });
 
-            // Prevent image drag
             track.querySelectorAll('img').forEach(img => {
                 img.addEventListener('dragstart', (e) => e.preventDefault());
             });
 
-            // Recalculate on resize
             window.addEventListener('resize', () => {
                 track.style.transition = 'none';
                 goToSlide(currentSlide);
@@ -1686,7 +1612,6 @@
                 });
             });
 
-            // Autoplay
             function startAutoplay() {
                 autoplayTimer = setInterval(() => {
                     goToSlide(currentSlide + 1);
@@ -1698,7 +1623,6 @@
                 startAutoplay();
             }
 
-            // Pause autoplay on hover
             const showcaseSection = document.querySelector('.product-showcase');
             showcaseSection.addEventListener('mouseenter', () => clearInterval(autoplayTimer));
             showcaseSection.addEventListener('mouseleave', () => startAutoplay());
@@ -1706,7 +1630,6 @@
             startAutoplay();
         })();
 
-        // CTA smooth scroll
         document.querySelectorAll('.cta-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
