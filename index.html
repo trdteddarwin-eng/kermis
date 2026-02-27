@@ -1506,11 +1506,46 @@
 
     <script>
 
-        const FRAME_COUNT = 180;
+        const IS_MOBILE = window.innerWidth <= 768;
+        // Mobile: every 3rd frame (60 total, ~267MB) vs Desktop: all 180 (~801MB)
+        const FRAME_STEP = IS_MOBILE ? 3 : 1;
+        const TOTAL_FRAMES = 180;
         const FRAME_PATH = 'sequence/frame_';
         const FRAME_EXT = '.webp';
-        const frames = new Array(FRAME_COUNT).fill(null);
+
+        // Build the list of frame numbers we'll actually use
+        const frameNumbers = [];
+        for (let i = 1; i <= TOTAL_FRAMES; i += FRAME_STEP) {
+            frameNumbers.push(i);
+        }
+        const USED_FRAME_COUNT = frameNumbers.length;
+
+        // Sparse array: index by position in our frameNumbers list
+        const frames = new Array(USED_FRAME_COUNT).fill(null);
+        // Track which frame URLs are loaded (to avoid re-fetching)
+        const frameLoaded = new Array(USED_FRAME_COUNT).fill(false);
         let allFramesReady = false;
+
+        // Mobile: sliding window to limit memory — keep max N decoded frames
+        const MOBILE_CACHE_SIZE = 20;
+        const frameAccessOrder = []; // LRU tracking for mobile
+
+        function evictOldFrames(keepAroundIndex) {
+            if (!IS_MOBILE || frameAccessOrder.length <= MOBILE_CACHE_SIZE) return;
+            // Sort by distance from current frame, evict farthest
+            const toEvict = frameAccessOrder
+                .filter(idx => Math.abs(idx - keepAroundIndex) > MOBILE_CACHE_SIZE / 2)
+                .slice(0, frameAccessOrder.length - MOBILE_CACHE_SIZE);
+
+            toEvict.forEach(idx => {
+                if (frames[idx]) {
+                    if (frames[idx].close) frames[idx].close(); // close ImageBitmap
+                    frames[idx] = null;
+                }
+                const pos = frameAccessOrder.indexOf(idx);
+                if (pos !== -1) frameAccessOrder.splice(pos, 1);
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
@@ -1518,25 +1553,37 @@
             const loadingPercent = document.getElementById('loading-percent');
             const loadingBar = document.getElementById('loading-bar');
 
-            const PHASE1_COUNT = 30;
+            const PHASE1_COUNT = IS_MOBILE ? 10 : 30;
             let phase1Loaded = 0;
             let pageRevealed = false;
 
-            function loadFrame(i) {
+            function loadFrame(listIndex) {
+                if (frameLoaded[listIndex]) return Promise.resolve();
+                frameLoaded[listIndex] = true;
+                const frameNum = frameNumbers[listIndex];
                 return new Promise(resolve => {
                     const img = new Image();
-                    const num = String(i).padStart(3, '0');
+                    const num = String(frameNum).padStart(3, '0');
                     img.src = FRAME_PATH + num + FRAME_EXT;
                     img.onload = async () => {
-                        try {
-                            const bitmap = await createImageBitmap(img);
-                            frames[i - 1] = bitmap;
-                        } catch (e) {
-                            frames[i - 1] = img;
+                        // Mobile: skip ImageBitmap to let browser manage memory
+                        if (!IS_MOBILE) {
+                            try {
+                                const bitmap = await createImageBitmap(img);
+                                frames[listIndex] = bitmap;
+                            } catch (e) {
+                                frames[listIndex] = img;
+                            }
+                        } else {
+                            frames[listIndex] = img;
+                            // Track in LRU
+                            const pos = frameAccessOrder.indexOf(listIndex);
+                            if (pos !== -1) frameAccessOrder.splice(pos, 1);
+                            frameAccessOrder.push(listIndex);
                         }
                         resolve();
                     };
-                    img.onerror = () => resolve();
+                    img.onerror = () => { frameLoaded[listIndex] = false; resolve(); };
                 });
             }
 
@@ -1556,7 +1603,7 @@
             }
 
             const phase1Promises = [];
-            for (let i = 1; i <= PHASE1_COUNT; i++) {
+            for (let i = 0; i < PHASE1_COUNT && i < USED_FRAME_COUNT; i++) {
                 const p = loadFrame(i).then(() => {
                     phase1Loaded++;
                     const progress = (phase1Loaded / PHASE1_COUNT) * 100;
@@ -1569,15 +1616,19 @@
             Promise.all(phase1Promises).then(() => {
                 revealPage();
 
-                const BATCH_SIZE = 10;
-                let nextFrame = PHASE1_COUNT + 1;
+                const BATCH_SIZE = IS_MOBILE ? 5 : 10;
+                let nextIdx = PHASE1_COUNT;
                 function loadNextBatch() {
-                    if (nextFrame > FRAME_COUNT) return;
+                    if (nextIdx >= USED_FRAME_COUNT) return;
                     const batch = [];
-                    for (let i = 0; i < BATCH_SIZE && nextFrame <= FRAME_COUNT; i++, nextFrame++) {
-                        batch.push(loadFrame(nextFrame));
+                    for (let i = 0; i < BATCH_SIZE && nextIdx < USED_FRAME_COUNT; i++, nextIdx++) {
+                        batch.push(loadFrame(nextIdx));
                     }
-                    Promise.all(batch).then(loadNextBatch);
+                    Promise.all(batch).then(() => {
+                        // On mobile, evict old frames after each batch
+                        if (IS_MOBILE) evictOldFrames(nextIdx - 1);
+                        loadNextBatch();
+                    });
                 }
                 loadNextBatch();
             });
@@ -1589,9 +1640,15 @@
             const heroSection = document.querySelector('.hero-scroll-section');
             const scrollIndicator = document.getElementById('scroll-indicator');
 
-            let isMobile = window.innerWidth <= 768;
-            let FRAME_START = isMobile ? 20 : 0;
-            let frameRange = FRAME_COUNT - FRAME_START;
+            let isMobile = IS_MOBILE;
+            // On mobile with frame skipping, find the start index in our reduced list
+            let FRAME_START_NUM = isMobile ? 20 : 0;
+            let startIdx = 0;
+            if (isMobile) {
+                // Find closest frame in our list to frame 20
+                startIdx = frameNumbers.findIndex(n => n >= FRAME_START_NUM) || 0;
+            }
+            let usableFrames = USED_FRAME_COUNT - startIdx;
 
             const beats = [
                 { el: document.getElementById('beat-a'), start: 0.00, end: 0.18 },
@@ -1615,9 +1672,9 @@
                 lastDrawnFrame = -1;
             }
 
-            function drawFrame(index) {
-                if (index === lastDrawnFrame) return;
-                const img = frames[index];
+            function drawFrame(listIndex) {
+                if (listIndex === lastDrawnFrame) return;
+                const img = frames[listIndex];
                 if (!img) return;
 
                 const iw = img.width || img.naturalWidth;
@@ -1635,7 +1692,15 @@
 
                 ctx.clearRect(0, 0, cw, ch);
                 ctx.drawImage(img, dx, dy, dw, dh);
-                lastDrawnFrame = index;
+                lastDrawnFrame = listIndex;
+
+                // Mobile: update LRU and evict distant frames
+                if (IS_MOBILE) {
+                    const pos = frameAccessOrder.indexOf(listIndex);
+                    if (pos !== -1) frameAccessOrder.splice(pos, 1);
+                    frameAccessOrder.push(listIndex);
+                    evictOldFrames(listIndex);
+                }
             }
 
             function beatOpacity(progress, start, end) {
@@ -1717,8 +1782,8 @@
                 }
 
                 const frameIndex = Math.min(
-                    FRAME_COUNT - 1,
-                    Math.max(0, FRAME_START + Math.floor(currentProgress * (frameRange - 1)))
+                    USED_FRAME_COUNT - 1,
+                    Math.max(0, startIdx + Math.floor(currentProgress * (usableFrames - 1)))
                 );
 
                 drawFrame(frameIndex);
@@ -1731,12 +1796,17 @@
                 resizeCanvas();
 
                 isMobile = window.innerWidth <= 768;
-                FRAME_START = isMobile ? 20 : 0;
-                frameRange = FRAME_COUNT - FRAME_START;
+                FRAME_START_NUM = isMobile ? 20 : 0;
+                if (isMobile) {
+                    startIdx = frameNumbers.findIndex(n => n >= FRAME_START_NUM) || 0;
+                } else {
+                    startIdx = 0;
+                }
+                usableFrames = USED_FRAME_COUNT - startIdx;
             });
             window.addEventListener('scroll', onScroll, { passive: true });
 
-            drawFrame(FRAME_START);
+            drawFrame(startIdx);
             updateOverlays(0);
 
             const heroObserver = new IntersectionObserver(([entry]) => {
