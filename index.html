@@ -398,6 +398,7 @@
             z-index: 10;
             pointer-events: none;
             will-change: opacity, transform;
+            opacity: 0;
         }
 
         .scroll-overlay.beat-a {
@@ -1507,8 +1508,10 @@
     <script>
 
         const IS_MOBILE = window.innerWidth <= 768;
-        // Mobile: every 3rd frame (60 total, ~267MB) vs Desktop: all 180 (~801MB)
-        const FRAME_STEP = IS_MOBILE ? 3 : 1;
+        // Mobile: every 2nd frame (90 total) vs Desktop: all 180
+        // Using Image objects on mobile (not ImageBitmap) — browser manages decoded
+        // pixel memory automatically and can re-decode from cache on demand.
+        const FRAME_STEP = IS_MOBILE ? 2 : 1;
         const TOTAL_FRAMES = 180;
         const FRAME_PATH = 'sequence/frame_';
         const FRAME_EXT = '.webp';
@@ -1520,32 +1523,9 @@
         }
         const USED_FRAME_COUNT = frameNumbers.length;
 
-        // Sparse array: index by position in our frameNumbers list
+        // Frames array — Image objects on mobile, ImageBitmap on desktop
         const frames = new Array(USED_FRAME_COUNT).fill(null);
-        // Track which frame URLs are loaded (to avoid re-fetching)
-        const frameLoaded = new Array(USED_FRAME_COUNT).fill(false);
         let allFramesReady = false;
-
-        // Mobile: sliding window to limit memory — keep max N decoded frames
-        const MOBILE_CACHE_SIZE = 20;
-        const frameAccessOrder = []; // LRU tracking for mobile
-
-        function evictOldFrames(keepAroundIndex) {
-            if (!IS_MOBILE || frameAccessOrder.length <= MOBILE_CACHE_SIZE) return;
-            // Sort by distance from current frame, evict farthest
-            const toEvict = frameAccessOrder
-                .filter(idx => Math.abs(idx - keepAroundIndex) > MOBILE_CACHE_SIZE / 2)
-                .slice(0, frameAccessOrder.length - MOBILE_CACHE_SIZE);
-
-            toEvict.forEach(idx => {
-                if (frames[idx]) {
-                    if (frames[idx].close) frames[idx].close(); // close ImageBitmap
-                    frames[idx] = null;
-                }
-                const pos = frameAccessOrder.indexOf(idx);
-                if (pos !== -1) frameAccessOrder.splice(pos, 1);
-            });
-        }
 
         document.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
@@ -1553,20 +1533,21 @@
             const loadingPercent = document.getElementById('loading-percent');
             const loadingBar = document.getElementById('loading-bar');
 
-            const PHASE1_COUNT = IS_MOBILE ? 10 : 30;
+            const PHASE1_COUNT = IS_MOBILE ? 15 : 30;
             let phase1Loaded = 0;
             let pageRevealed = false;
 
             function loadFrame(listIndex) {
-                if (frameLoaded[listIndex]) return Promise.resolve();
-                frameLoaded[listIndex] = true;
+                if (frames[listIndex]) return Promise.resolve();
                 const frameNum = frameNumbers[listIndex];
                 return new Promise(resolve => {
                     const img = new Image();
                     const num = String(frameNum).padStart(3, '0');
                     img.src = FRAME_PATH + num + FRAME_EXT;
                     img.onload = async () => {
-                        // Mobile: skip ImageBitmap to let browser manage memory
+                        // Mobile: keep as Image — browser manages decoded pixel memory
+                        // and can re-decode from network cache when drawn to canvas.
+                        // Desktop: use ImageBitmap for fastest canvas draw.
                         if (!IS_MOBILE) {
                             try {
                                 const bitmap = await createImageBitmap(img);
@@ -1576,14 +1557,10 @@
                             }
                         } else {
                             frames[listIndex] = img;
-                            // Track in LRU
-                            const pos = frameAccessOrder.indexOf(listIndex);
-                            if (pos !== -1) frameAccessOrder.splice(pos, 1);
-                            frameAccessOrder.push(listIndex);
                         }
                         resolve();
                     };
-                    img.onerror = () => { frameLoaded[listIndex] = false; resolve(); };
+                    img.onerror = () => resolve();
                 });
             }
 
@@ -1616,7 +1593,7 @@
             Promise.all(phase1Promises).then(() => {
                 revealPage();
 
-                const BATCH_SIZE = IS_MOBILE ? 5 : 10;
+                const BATCH_SIZE = IS_MOBILE ? 8 : 10;
                 let nextIdx = PHASE1_COUNT;
                 function loadNextBatch() {
                     if (nextIdx >= USED_FRAME_COUNT) return;
@@ -1624,11 +1601,7 @@
                     for (let i = 0; i < BATCH_SIZE && nextIdx < USED_FRAME_COUNT; i++, nextIdx++) {
                         batch.push(loadFrame(nextIdx));
                     }
-                    Promise.all(batch).then(() => {
-                        // On mobile, evict old frames after each batch
-                        if (IS_MOBILE) evictOldFrames(nextIdx - 1);
-                        loadNextBatch();
-                    });
+                    Promise.all(batch).then(loadNextBatch);
                 }
                 loadNextBatch();
             });
@@ -1693,14 +1666,6 @@
                 ctx.clearRect(0, 0, cw, ch);
                 ctx.drawImage(img, dx, dy, dw, dh);
                 lastDrawnFrame = listIndex;
-
-                // Mobile: update LRU and evict distant frames
-                if (IS_MOBILE) {
-                    const pos = frameAccessOrder.indexOf(listIndex);
-                    if (pos !== -1) frameAccessOrder.splice(pos, 1);
-                    frameAccessOrder.push(listIndex);
-                    evictOldFrames(listIndex);
-                }
             }
 
             function beatOpacity(progress, start, end) {
